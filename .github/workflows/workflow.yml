@@ -6,7 +6,7 @@ on:
       target:
         description: 'Deploy target'
         required: true
-        default: 'prod'
+        default: ''
         type: choice
         options:
         - prod
