@@ -1,18 +1,8 @@
 name: Build and push backend image
-run-name: Build and deploy with ${{ github.ref }} 
+run-name: Build and deploy with ${{ github.ref }} with ${{ github.event_name }}
 
 on:
   workflow_dispatch:
-    inputs:
-      target:
-        description: 'Deploy target'
-        required: true
-        default: 'prod'
-        type: choice
-        options:
-        - dev
-        - stage
-        - prod
   push:
     tags:
       - 'v[0-9]+\.[0-9]+\.[0-9]+.dev'
@@ -33,7 +23,7 @@ jobs:
   
   deploy-dev:
     needs: [build-image]
-    if: endsWith(github.ref, 'dev') || ${{ inputs.target == 'dev' }}
+    if: endsWith(github.ref, 'dev')
     runs-on: ubuntu-latest
     steps:
     - name: Run script file
@@ -41,7 +31,7 @@ jobs:
 
   deploy-stage:
     needs: [build-image]
-    if: endsWith(github.ref, 'stage') || ${{ inputs.target == 'stage' }}
+    if: endsWith(github.ref, 'stage')
     runs-on: ubuntu-latest
     steps:
     - name: Run script file
@@ -49,8 +39,8 @@ jobs:
 
   deploy-production:
     needs: [build-image]
-    if: ${{ github.event_name == 'workflow_dispatch' }} && ${{ inputs.target == 'prod' }}
+    if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     steps:
     - name: Run script file
-      run: echo ${{github.event_name}}
+      run: echo 'prod'
