@@ -30,7 +30,7 @@ jobs:
   
   deploy-dev:
     needs: [build-image]
-    if: endWith(github.ref, 'dev')
+    if: endsWith(github.ref, 'dev')
     runs-on: ubuntu-latest
     steps:
     - name: Run script file
@@ -38,7 +38,7 @@ jobs:
 
   deploy-stage:
     needs: [build-image]
-    if: endWith(github.ref, 'stage')
+    if: endsWith(github.ref, 'stage')
     runs-on: ubuntu-latest
     steps:
     - name: Run script file
