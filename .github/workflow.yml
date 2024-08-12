@@ -1,0 +1,53 @@
+name: Build and push backend image
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Deploy target'
+        required: true
+        default: 'prod'
+        type: choice
+        options:
+        - prod
+  push:
+    tags:
+      - 'v[0-9]+\.[0-9]+\.[0-9]+.dev'
+      - 'v[0-9]+\.[0-9]+\.[0-9]+.stage'
+    paths:
+      - backend/**
+
+jobs:
+  build-image:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Run script file
+      run: |
+          docker build -t test:latest -f Dockerfile .
+      shell: bash
+  
+  deploy-dev:
+    needs: [build-image]
+    if: endWith(github.ref, 'dev')
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run script file
+      run: echo 'dev'
+
+  deploy-stage:
+    needs: [build-image]
+    if: endWith(github.ref, 'stage')
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run script file
+      run: echo 'stage'
+
+  deploy-production:
+    needs: [build-image]
+    if: ${{inputs.target}} == 'prod'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run script file
+      run: echo 'prod'
