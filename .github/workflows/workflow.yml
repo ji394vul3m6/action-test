@@ -1,5 +1,5 @@
 name: Build and push backend image
-run-name: Build and deploy with ${{ github.ref }} by @${{ github.actor }}
+run-name: Build and deploy with ${{ github.ref }} 
 
 on:
   workflow_dispatch:
